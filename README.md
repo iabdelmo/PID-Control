@@ -2,7 +2,27 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## PID Controller
+The PID cotroller is a widely used technique. It is based on feeding the difference between the measurement and the desired value and from this difference it calculates the control output to revert the system closer to the desired set value. In this project the primary control output of the PID controller is the car steering wheel angle and the measurement is how far the car from the center line of the road.
 
+## P - Proportional Gain
+The P-term gives an output proportional to the cross-tracked error (difference between measurement and set point). Using the P-Controller can lead to oscillations around the set point. The output of the P-term is as following `-Kp cte`
+
+## D - Differential Gain
+The D-term gives an output that takes into consideration how that the cross-track error is being reduced from the last step so it starts to steer up again reducing the overshooting effect that could happen from the P-term.  The output of the D-term is as following: `-Kd d/dt(cte)`
+
+## I - Integral Gain
+The I-term gives an output that sums up the cross-track error over time. This term could be used to eliminate any system bias. For example if the zero steering angle doesn't result in a straight trajectory. This systematic error can only be eliminated if we accumulated the effect of the error over time. The output of the I-term is as following: `-Ki sum(cte)`
+
+## Hyperparameters Tuning
+
+I tuned the hyperparameters manually although I implemented the twiddle algorithm for online tuning. but I found the manual tuning was more effective in this case. I faced alot of issues in the tuning using twiddle for example: 
+ After stepping up or down I should save the dp, Kp & twiddle stat, then restart the simulation to start again from this point so I have put that in the future work for this project.  
+
+## Suggested Improvements
+- The tuning technique need to be changed to be more reliable for this case
+- I could also add an emergency braking if the cross-track error increase too quickly
+- The PID output could be smoothed by filtering it but that will reduce the reactivity.
 ## Dependencies
 
 * cmake >= 3.5
