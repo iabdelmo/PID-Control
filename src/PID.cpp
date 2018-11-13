@@ -14,19 +14,23 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
 	double temp_dp = 0.1;
 
-	// check if the gains are passed with values so the twiddle algo. should not execute
+	// check if the gains are passed with values so the twiddle algo.
+	//should not be execute
 	if((Kp || Ki || Kd) != 0)
 	{
 		this->Kp = Kp;
 		this->Ki = Ki;
 		this->Kd = Kd;
 
+		// clear twiddle flag, as the PID gains are defined
 		twiddle = false;
 	}
 	else
 	{
+		//set twiddle flag as the PID gains are not defined
 		cout<<"twiddle tuning"<<endl;
 
+		// initialize PID gains with zeros
 		this->Kp = 0;
 		this->Ki = 0;
 		this->Kd = 0;
@@ -36,6 +40,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
 		temp_dp = 0;
 		dp.push_back(temp_dp);
+
 		temp_dp = 0;
 		dp.push_back(temp_dp);
 
@@ -64,6 +69,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
 	cout<<"twiddle = "<<twiddle<<endl;
 
+	//clear PID errors
 	p_error = 0;
 	i_error = 0;
 	d_error = 0;
@@ -74,6 +80,7 @@ void PID::UpdateError(double cte) {
 	static bool first_run =  true;
 	static int i = 0;
 
+	// if this the 1st run take the CTE as the best error
 	if(first_run)
 	{
 		best_error = cte;
@@ -81,11 +88,12 @@ void PID::UpdateError(double cte) {
 		first_run = false;
 	}
 
-
+	// update the PID errors according to the CTE of this run
 	d_error = cte - p_error;
 	p_error = cte;
 	i_error += cte;
 
+	// IF twiddle algo. enabled start tuning
 	if(twiddle == true)
 	{
 
